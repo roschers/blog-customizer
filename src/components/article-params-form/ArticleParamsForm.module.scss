@@ -23,6 +23,25 @@
 	padding: 50px 31px;
 	background-color: #ffffff;
 	border-right: 1px solid #000000;
+
+	h2 {
+		margin: 0 0 50px;
+		font-weight: 800;
+		font-size: 31px;
+		font-family: 'Open Sans', sans-serif;
+		text-transform: uppercase;
+	}
+
+	> *:not(:last-child) {
+		margin-bottom: 50px;
+	}
+}
+
+.divider {
+	width: 554px;
+	height: 1px;
+	margin-bottom: 50px;
+	background-color: #d7d7d7;
 }
 
 .bottomContainer {

@@ -1,14 +1,15 @@
-import clsx from 'clsx';
-
-// Сообщаем вебпаку, что этот файл использует это изображение.
 import plane from '../../images/plane.png';
 import { Text } from 'src/ui/text';
+import { useArticle } from 'src/context/ArticleContext';
 
 import styles from './Article.module.scss';
 
 export const Article = () => {
+	const { articleState } = useArticle();
+	const isWide = articleState.contentWidth.className === 'width-wide';
+
 	return (
-		<article className={clsx(styles.article)}>
+		<article className={styles.article} data-width={isWide ? 'wide' : 'narrow'}>
 			<Text as='h1' size={45} weight={800} uppercase dynamicLite>
 				Портрет Западной Швейцарии
 			</Text>

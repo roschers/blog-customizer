@@ -1,9 +1,10 @@
 import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
 import { useEffect, useRef, useState } from 'react';
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 import { Select } from 'src/ui/select';
 import { RadioGroup } from 'src/ui/radio-group';
+import { Text } from 'src/ui/text';
 import {
 	fontFamilyOptions,
 	fontColors,
@@ -24,37 +25,36 @@ export const ArticleParamsForm = () => {
 	const [formState, setFormState] =
 		useState<ArticleStateType>(defaultArticleState);
 
-	// Синхронизируем состояние формы с текущим состоянием при открытии сайдбара
 	useEffect(() => {
 		if (isOpen) {
 			setFormState(articleState);
+
+			const handleClickOutside = (event: MouseEvent) => {
+				if (
+					formRef.current &&
+					!formRef.current.contains(event.target as Node)
+				) {
+					setIsOpen(false);
+				}
+			};
+
+			document.addEventListener('mousedown', handleClickOutside);
+			return () => {
+				document.removeEventListener('mousedown', handleClickOutside);
+			};
 		}
 	}, [isOpen, articleState]);
-
-	useEffect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
-			if (formRef.current && !formRef.current.contains(event.target as Node)) {
-				setIsOpen(false);
-			}
-		};
-
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
-		};
-	}, []);
 
 	const toggleForm = () => {
 		setIsOpen(!isOpen);
 	};
 
-	const handleReset = (e: React.MouseEvent<HTMLButtonElement>) => {
-		e.preventDefault();
+	const handleReset = () => {
 		setFormState(defaultArticleState);
 		setArticleState(defaultArticleState);
 	};
 
-	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setArticleState(formState);
 		setIsOpen(false);
@@ -65,11 +65,16 @@ export const ArticleParamsForm = () => {
 			<ArrowButton isOpen={isOpen} onClick={toggleForm} />
 			<aside
 				ref={formRef}
-				className={classNames(styles.container, {
+				className={clsx(styles.container, {
 					[styles.container_open]: isOpen,
 				})}>
-				<form className={styles.form}>
-					<h2>Задайте параметры</h2>
+				<form
+					className={styles.form}
+					onSubmit={handleSubmit}
+					onReset={handleReset}>
+					<Text as='h2' size={31} weight={800} family='open-sans' uppercase>
+						Задайте параметры
+					</Text>
 
 					<Select
 						options={fontFamilyOptions}
@@ -99,6 +104,8 @@ export const ArticleParamsForm = () => {
 						title='ЦВЕТ ШРИФТА'
 					/>
 
+					<div className={styles.divider} />
+
 					<Select
 						options={backgroundColors}
 						selected={formState.backgroundColor}
@@ -118,18 +125,8 @@ export const ArticleParamsForm = () => {
 					/>
 
 					<div className={styles.bottomContainer}>
-						<Button
-							title='Сбросить'
-							onClick={handleReset}
-							type='clear'
-							htmlType='button'
-						/>
-						<Button
-							title='Применить'
-							onClick={handleSubmit}
-							type='apply'
-							htmlType='button'
-						/>
+						<Button title='Сбросить' type='clear' htmlType='reset' />
+						<Button title='Применить' type='apply' htmlType='submit' />
 					</div>
 				</form>
 			</aside>
