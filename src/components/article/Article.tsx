@@ -1,14 +1,15 @@
-import clsx from 'clsx';
-
-// Сообщаем вебпаку, что этот файл использует это изображение.
-import plane from 'src/images/plane.png';
+import plane from '../../images/plane.png';
 import { Text } from 'src/ui/text';
+import { useArticle } from 'src/context/ArticleContext';
 
 import styles from './Article.module.scss';
 
 export const Article = () => {
+	const { articleState } = useArticle();
+	const isWide = articleState.contentWidth.className === 'width-wide';
+
 	return (
-		<article className={clsx(styles.article)}>
+		<article className={styles.article} data-width={isWide ? 'wide' : 'narrow'}>
 			<Text as='h1' size={45} weight={800} uppercase dynamicLite>
 				Портрет Западной Швейцарии
 			</Text>
@@ -32,7 +33,7 @@ export const Article = () => {
 			<Text dynamic size={18}>
 				Выбор пал на примитивиста Матиаса Форбаша, работающего под псевдонимом
 				Фиштр. Ему поставили задачу изобразить всё лучшее во франкоговорящей
-				части Швейцарии — горы, озёра, вина, сыры, доброжелательность и свободу.
+				части Швейцарии — горы, озёра, вина, сыры, доброжелательность и свобода.
 				Заказ был выполнен в рекордный срок, всего за 5 месяцев. Самолёт
 				получился похожим на самого художника: такой же добродушный и с улыбкой
 				до ушей.
