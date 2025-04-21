@@ -26,30 +26,28 @@ export const ArticleParamsForm = () => {
 		useState<ArticleStateType>(defaultArticleState);
 
 	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (formRef.current && !formRef.current.contains(event.target as Node)) {
+				setIsOpen(false);
+			}
+		};
+
 		if (isOpen) {
 			setFormState(articleState);
-
-			const handleClickOutside = (event: MouseEvent) => {
-				if (
-					formRef.current &&
-					!formRef.current.contains(event.target as Node)
-				) {
-					setIsOpen(false);
-				}
-			};
-
 			document.addEventListener('mousedown', handleClickOutside);
-			return () => {
-				document.removeEventListener('mousedown', handleClickOutside);
-			};
 		}
+
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
 	}, [isOpen, articleState]);
 
 	const toggleForm = () => {
 		setIsOpen(!isOpen);
 	};
 
-	const handleReset = () => {
+	const handleReset = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
 		setFormState(defaultArticleState);
 		setArticleState(defaultArticleState);
 	};
