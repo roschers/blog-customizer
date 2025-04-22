@@ -1,6 +1,6 @@
 import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { clsx } from 'clsx';
 import { Select } from 'src/ui/select';
 import { RadioGroup } from 'src/ui/radio-group';
@@ -14,40 +14,44 @@ import {
 	defaultArticleState,
 	type ArticleStateType,
 } from 'src/constants/articleProps';
-import { useArticle } from 'src/context/ArticleContext';
 
 import styles from './ArticleParamsForm.module.scss';
 
-export const ArticleParamsForm = () => {
-	const [isOpen, setIsOpen] = useState(false);
+type ArticleParamsFormProps = {
+	articleState: ArticleStateType;
+	setArticleState: (state: ArticleStateType) => void;
+};
+
+export const ArticleParamsForm = ({
+	articleState,
+	setArticleState,
+}: ArticleParamsFormProps) => {
+	const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
 	const formRef = useRef<HTMLElement>(null);
-	const { articleState, setArticleState } = useArticle();
-	const [formState, setFormState] =
-		useState<ArticleStateType>(defaultArticleState);
+	const [formState, setFormState] = useState<ArticleStateType>(articleState);
 
-	useEffect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
-			if (formRef.current && !formRef.current.contains(event.target as Node)) {
-				setIsOpen(false);
-			}
-		};
-
-		if (isOpen) {
+	const toggleForm = () => {
+		if (isSidePanelOpen) {
+			// При закрытии сбрасываем состояние формы к текущему состоянию статьи
+			setFormState(articleState);
+			document.removeEventListener('mousedown', handleClickOutside);
+		} else {
+			// При открытии устанавливаем текущие стили и добавляем обработчик
 			setFormState(articleState);
 			document.addEventListener('mousedown', handleClickOutside);
 		}
-
-		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
-		};
-	}, [isOpen, articleState]);
-
-	const toggleForm = () => {
-		setIsOpen(!isOpen);
+		setIsSidePanelOpen(!isSidePanelOpen);
 	};
 
-	const handleReset = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
+	const handleClickOutside = (event: MouseEvent) => {
+		if (formRef.current && !formRef.current.contains(event.target as Node)) {
+			setFormState(articleState);
+			setIsSidePanelOpen(false);
+			document.removeEventListener('mousedown', handleClickOutside);
+		}
+	};
+
+	const handleReset = () => {
 		setFormState(defaultArticleState);
 		setArticleState(defaultArticleState);
 	};
@@ -55,16 +59,16 @@ export const ArticleParamsForm = () => {
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setArticleState(formState);
-		setIsOpen(false);
+		setIsSidePanelOpen(false);
 	};
 
 	return (
 		<>
-			<ArrowButton isOpen={isOpen} onClick={toggleForm} />
+			<ArrowButton isOpen={isSidePanelOpen} onClick={toggleForm} />
 			<aside
 				ref={formRef}
 				className={clsx(styles.container, {
-					[styles.container_open]: isOpen,
+					[styles.container_open]: isSidePanelOpen,
 				})}>
 				<form
 					className={styles.form}

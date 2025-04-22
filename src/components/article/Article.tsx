@@ -1,12 +1,15 @@
 import { Text } from 'src/ui/text';
 import plane from 'src/images/plane.png';
-import { useArticle } from 'src/context/ArticleContext';
 import clsx from 'clsx';
+import { type ArticleStateType } from 'src/constants/articleProps';
 
 import styles from './Article.module.scss';
 
-export const Article = () => {
-	const { articleState } = useArticle();
+type ArticleProps = {
+	articleState: ArticleStateType;
+};
+
+export const Article = ({ articleState }: ArticleProps) => {
 	const isWide = articleState.contentWidth.className === 'width-wide';
 
 	return (

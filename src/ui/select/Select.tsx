@@ -78,7 +78,6 @@ export const Select = (props: SelectProps) => {
 							[styles.placeholder_selected]: !!selected?.value,
 						}
 					)}
-					data-status={status}
 					data-selected={!!selected?.value}
 					onClick={handlePlaceHolderClick}
 					role='button'
