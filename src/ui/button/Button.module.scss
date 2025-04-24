@@ -8,24 +8,25 @@
 	text-align: center;
 	border: 1px solid #000000;
 	cursor: pointer;
+	transition: all 0.2s ease;
 }
 
 .button_apply {
 	background-color: #ffc802;
+
+	&:hover {
+		background-color: #ffedab;
+	}
 }
 
 .button_clear {
-	background-color: white;
-}
+	background-color: #ffffff;
 
-.button_apply:hover {
-	background-color: #ffedab;
-}
+	&:hover {
+		background-color: #000000;
 
-.button_clear:hover {
-	background-color: #000000;
-}
-
-.button_clear:hover div {
-	color: white;
+		div {
+			color: #ffffff;
+		}
+	}
 }

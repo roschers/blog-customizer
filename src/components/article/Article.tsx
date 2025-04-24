@@ -1,38 +1,50 @@
-import clsx from 'clsx';
-
-// Сообщаем вебпаку, что этот файл использует это изображение.
-import plane from 'src/images/plane.png';
 import { Text } from 'src/ui/text';
+import plane from 'src/images/plane.png';
+import clsx from 'clsx';
+import { type ArticleStateType } from 'src/constants/articleProps';
 
 import styles from './Article.module.scss';
 
-export const Article = () => {
+type ArticleProps = {
+	articleState: ArticleStateType;
+};
+
+export const Article = ({ articleState }: ArticleProps) => {
+	const isWide = articleState.contentWidth.className === 'width-wide';
+
 	return (
-		<article className={clsx(styles.article)}>
-			<Text as='h1' size={45} weight={800} uppercase dynamicLite>
-				Портрет Западной Швейцарии
-			</Text>
+		<article
+			className={clsx(styles.article, {
+				[styles.article_wide]: isWide,
+			})}>
 			<div className={styles.titleDescription}>
+				<Text as='h1' size={45} weight={800} uppercase dynamicLite>
+					Портрет Западной Швейцарии
+				</Text>
 				<Text size={22} weight={800} uppercase align='center' dynamicLite>
 					Примитивист Фиштр расписывает новый бюджетный авиалайнер
 				</Text>
 			</div>
 			<img className={styles.image} src={plane} alt='Картинка самолета' />
 			<Text dynamic size={18} fontStyle='italic'>
-				Фото: Hans-Peter Gauster , &quot;Bombardier CSeries CS300 HB-JCA&quot; ©
+				Фото: Hans-Peter Gauster, &quot;Bombardier CSeries CS300 HB-JCA&quot; ©
 				2017 CC BY-SA 2.0
 			</Text>
 			<Text dynamic size={18}>
-				В конце 2016 года швейцарская авиакомпания Swiss получила свой первый
-				канадский «Бомбардье CS300» для полётов малой и средней дальности. Чтобы
-				придать новой 145-местной машине неповторимую индивидуальность, ливрею
-				заказали живописцу. При условии, что эскиз он выполнит в одиночку и
-				лично поправит роспись, когда её будут наносить на фюзеляж.
+				Швейцарская авиакомпания Swiss получила первый из пяти заказанных ею
+				бюджетных авиалайнеров Bombardier CS100. Самолёт получил необычную
+				ливрею, которая стала результатом сотрудничества с Музеем Арт Брют в
+				Лозанне.
+			</Text>
+			<Text dynamic size={18}>
+				Чтобы разрисовать первый самолёт, в авиакомпании выбрали работы Ханса
+				Крюзи, который рисует поезда, самолёты и вокзалы, а также придумали
+				проект, посвящённый Романдии &mdash; франкоговорящей части Швейцарии.
 			</Text>
 			<Text dynamic size={18}>
 				Выбор пал на примитивиста Матиаса Форбаша, работающего под псевдонимом
 				Фиштр. Ему поставили задачу изобразить всё лучшее во франкоговорящей
-				части Швейцарии — горы, озёра, вина, сыры, доброжелательность и свободу.
+				части Швейцарии — горы, озёра, вина, сыры, доброжелательность и свобода.
 				Заказ был выполнен в рекордный срок, всего за 5 месяцев. Самолёт
 				получился похожим на самого художника: такой же добродушный и с улыбкой
 				до ушей.

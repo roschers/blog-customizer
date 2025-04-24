@@ -1,7 +1,6 @@
-import { Text } from 'src/ui/text';
-
 import styles from './Button.module.scss';
 import { clsx } from 'clsx';
+import { Text } from 'src/ui/text';
 
 export const Button = ({
 	title,
@@ -10,7 +9,7 @@ export const Button = ({
 	type,
 }: {
 	title: string;
-	onClick?: () => void;
+	onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 	htmlType?: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
 	type: 'apply' | 'clear';
 }) => {
@@ -23,7 +22,7 @@ export const Button = ({
 			)}
 			type={htmlType}
 			onClick={onClick}>
-			<Text weight={800} uppercase>
+			<Text size={18} uppercase weight={800}>
 				{title}
 			</Text>
 		</button>
