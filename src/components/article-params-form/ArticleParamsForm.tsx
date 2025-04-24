@@ -1,10 +1,11 @@
 import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { clsx } from 'clsx';
 import { Select } from 'src/ui/select';
 import { RadioGroup } from 'src/ui/radio-group';
 import { Text } from 'src/ui/text';
+import { Separator } from 'src/ui/separator';
 import {
 	fontFamilyOptions,
 	fontColors,
@@ -30,25 +31,28 @@ export const ArticleParamsForm = ({
 	const formRef = useRef<HTMLElement>(null);
 	const [formState, setFormState] = useState<ArticleStateType>(articleState);
 
-	const toggleForm = () => {
+	useEffect(() => {
 		if (isSidePanelOpen) {
-			// При закрытии сбрасываем состояние формы к текущему состоянию статьи
+			document.addEventListener('mousedown', handleClickOutside);
+		} else {
 			setFormState(articleState);
 			document.removeEventListener('mousedown', handleClickOutside);
-		} else {
-			// При открытии устанавливаем текущие стили и добавляем обработчик
-			setFormState(articleState);
-			document.addEventListener('mousedown', handleClickOutside);
 		}
-		setIsSidePanelOpen(!isSidePanelOpen);
-	};
+
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [isSidePanelOpen, articleState]);
 
 	const handleClickOutside = (event: MouseEvent) => {
 		if (formRef.current && !formRef.current.contains(event.target as Node)) {
 			setFormState(articleState);
 			setIsSidePanelOpen(false);
-			document.removeEventListener('mousedown', handleClickOutside);
 		}
+	};
+
+	const toggleForm = () => {
+		setIsSidePanelOpen(!isSidePanelOpen);
 	};
 
 	const handleReset = () => {
@@ -106,7 +110,7 @@ export const ArticleParamsForm = ({
 						title='ЦВЕТ ШРИФТА'
 					/>
 
-					<div className={styles.divider} />
+					<Separator />
 
 					<Select
 						options={backgroundColors}
